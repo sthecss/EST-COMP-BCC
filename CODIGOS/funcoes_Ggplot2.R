@@ -1,6 +1,6 @@
-# ===================================================================
+# =======================================================================
 #              GGPLOT : NOVAS VISUALIZAÇÕES PARA OS GRÁFICOS
-# ===================================================================
+# =======================================================================
 #
 # Por mais que o R possa ter uma forma nativa de fazer gráficos, eles
 # não entregam uma estética tão elevada nem permitem um rigor mais rebuscado.
@@ -12,10 +12,9 @@
 #
 # Após a instalação, carregue a biblioteca com o comando abaixo:
 
-    library(ggplot2)
     
     # ===================================================================
-    #                          GGPLOT GRÁFICOS
+                              library(ggplot2)
     # ===================================================================
     #
     # Usaremos a ggplot2 para criar diferentes tipos de gráficos
