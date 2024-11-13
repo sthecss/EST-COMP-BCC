@@ -1,15 +1,16 @@
-[ C O N S I D E R A C O E S 
+### [ C O N S I D E R A Ç Õ E S ]
 
-> IDE USADA (e que recomendo): R Studio.
->> Atente-se a instalar o R propriamente dito, e depois a IDE R Studio.
->> Acesso: https://posit.co/download/rstudio-desktop/
+#### > IDE Usada (e Recomendada): RStudio  
+Para aproveitar ao máximo o uso do R, recomendo fortemente a IDE **RStudio**.  
+**Dica:** primeiro, instale o R propriamente dito, e em seguida baixe e instale o RStudio.  
+[Download do RStudio](https://posit.co/download/rstudio-desktop/)
 
-> Materia que eu tive e desenvolvi os codigos: (finada) Estatistica Computacional, no bacharel em Ciencia da Computacao.
->> A aula foi ministrada pelo Professor Pedro Franklin, que nos disponibilizava dados e bibliografia recomendada no próprio site dele.
->> Acesso: https://franklinpedro.github.io/ensino/estatistica-computacional/
+#### > Contexto da Matéria  
+Os códigos foram desenvolvidos durante a disciplina de **Estatística Computacional** (saudades!) no curso de Ciência da Computação, com o Professor Pedro Franklin. Ele sempre disponibilizava dados e bibliografia útil no próprio site dele – um verdadeiro tesouro de referências e exercícios!  
+[Acesse o site do professor](https://franklinpedro.github.io/ensino/estatistica-computacional/)
 
+#### Organização dos Arquivos  
+Optei por manter todos os arquivos em uma única pasta para facilitar a importação e visualização dos scripts no RStudio.
 
-<< Decidi manter todos numa só pasta mesmo, assim facilita na hora de abrir essa pasta no R Studio. >>
-
-
-<< Bjs da Sthe >>
+#### Finalizando...
+Bjs da Sthe! 🐱‍💻
