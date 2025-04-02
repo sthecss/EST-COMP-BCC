@@ -1,9 +1,4 @@
 # 📚 Anotações de Matéria 📚
-
-Este repositório é o root do meu site, onde compartilho anotações das aulas. Utilizo o GitHub Pages para organizar e disponibilizar o conteúdo.
-
-🌐 **Acesse o site:** [https://sthecss.github.io/EST-COMP-BCC/](https://sthecss.github.io/EST-COMP-BCC/)
-
 ---
 
 ## ✍️ Conteúdo da Ementa
