@@ -155,13 +155,13 @@
                     <i data-lucide="chevron-right" class="ml-auto text-gray-300"></i>
                 </div>
 
-                <!-- 5. Estudo de Caso: Flores (Iris) -->
+                <!-- 5. Estudo de Caso: Flores (Árvores) -->
                 <div class="bento-card col-span-1 md:col-span-1 md:row-span-1 bg-purple-50 rounded-3xl p-6 border border-purple-100 hover:border-purple-300" onclick="openModule('flores')">
                     <div class="flex items-center gap-2 mb-2">
                         <i data-lucide="flower-2" class="text-purple-600"></i>
-                        <h3 class="font-bold text-purple-900">Iris Dataset</h3>
+                        <h3 class="font-bold text-purple-900">Iris & Árvores</h3>
                     </div>
-                    <p class="text-xs text-purple-700">Classificação manual de espécies.</p>
+                    <p class="text-xs text-purple-700">Classificação manual, Árvores de Decisão e Random Forest.</p>
                 </div>
 
                 <!-- 6. Estudo de Caso: Pinguins (KNN) -->
@@ -170,7 +170,7 @@
                         <i data-lucide="bird" class="text-orange-600"></i>
                         <h3 class="font-bold text-orange-900">Pinguins KNN</h3>
                     </div>
-                    <p class="text-xs text-orange-700">Machine Learning com vizinhos próximos.</p>
+                    <p class="text-xs text-orange-700">Lógica manual e Algoritmo KNN profissional.</p>
                 </div>
 
                  <!-- 7. Datasets Info -->
@@ -468,14 +468,12 @@ ggplot(treino, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
   geom_point()`
                 },
                 {
-                    title: "Algoritmo Manual",
-                    tag: "Lógica",
+                    title: "Lógica Manual (Árvore)",
+                    tag: "Algoritmo Manual",
                     filename: "estudoDeCaso_flores.R",
-                    tip: "Este é um exemplo de 'Hard Coding' de regras, precursor do Machine Learning.",
-                    content: `<p>Criamos um classificador manual simples baseado na observação dos gráficos:
-                              <br>- Pétala pequena (< 2.5) = Setosa.
-                              <br>- Largura pequena (< 1.75) = Versicolor.
-                              <br>- O resto = Virginica.</p>`,
+                    tip: "Este é um exemplo de 'Hard Coding' de regras, precursor das Árvores de Decisão.",
+                    content: `<p>Originalmente, criamos um classificador manual (if/else) baseado na observação dos gráficos.</p>
+                              <p>Isso é a base de uma Árvore de Decisão: dividir os dados em 'folhas' baseadas em perguntas de Sim/Não.</p>`,
                     code: `resultados <- character(nrow(teste))
 
 for (j in 1:nrow(teste)) {
@@ -491,31 +489,94 @@ for (j in 1:nrow(teste)) {
 # Calculando precisão
 taxa_acerto <- mean(teste$Species == resultados)
 print(paste("Acerto:", taxa_acerto))`
+                },
+                {
+                    title: "Árvores de Decisão (rpart)",
+                    tag: "Machine Learning",
+                    filename: "estudoDeCaso_flores_v2.R",
+                    tip: "O pacote 'rpart' (Recursive Partitioning) faz as perguntas automaticamente.",
+                    content: `<p>Agora, a versão profissional! Usamos a biblioteca <code>rpart</code> para criar a árvore automaticamente.</p>
+                              <p>O algoritmo decide matematicamente onde cortar os dados para separar melhor as classes.</p>`,
+                    code: `# Instalando e Carregando
+# install.packages("rpart")
+# install.packages("rpart.plot")
+library(rpart)
+library(rpart.plot)
+
+# Criando o modelo (Espécie em função de todas as outras variáveis)
+arvore <- rpart(Species ~ ., data = treino, method = "class")
+
+# Visualizando a Árvore
+rpart.plot(arvore, main = "Árvore de Decisão - Iris")
+
+# Prevendo no teste
+previsao_arvore <- predict(arvore, teste, type = "class")
+mean(previsao_arvore == teste$Species) # Acurácia`
+                },
+                {
+                    title: "Random Forest",
+                    tag: "Machine Learning Avançado",
+                    filename: "estudoDeCaso_flores_v2.R",
+                    tip: "Random Forest cria MUITAS árvores e faz uma votação. É mais robusto.",
+                    content: `<p>Uma "Floresta Aleatória" cria centenas de árvores de decisão levemente diferentes e combina os resultados.</p>
+                              <p>Geralmente é mais preciso que uma única árvore e evita decorar os dados (overfitting).</p>`,
+                    code: `# install.packages("randomForest")
+library(randomForest)
+
+set.seed(42)
+
+# Criando a floresta com 500 árvores
+floresta <- randomForest(Species ~ ., data = treino, ntree = 500)
+
+# Verificando a importância das variáveis
+varImpPlot(floresta, main = "Importância das Variáveis")
+
+print(floresta) # Mostra a matriz de confusão do treino`
                 }
             ],
             pinguins: [
                 {
-                    title: "Pinguins & KNN",
-                    tag: "Machine Learning",
+                    title: "KNN Manual (Lógica)",
+                    tag: "Lógica",
                     filename: "estudoDeCaso_penguins.R",
-                    tip: "KNN = K-Nearest Neighbors (K-Vizinhos Mais Próximos).",
-                    content: `<p>Usamos o dataset <code>palmerpenguins</code>. O objetivo é prever a espécie baseada no peso e bico.</p>
-                              <p>O algoritmo KNN calcula a <strong>distância euclidiana</strong> entre o ponto que queremos prever e todos os pontos conhecidos.</p>`,
+                    tip: "Entender a matemática (Distância Euclidiana) é fundamental.",
+                    content: `<p>Originalmente, calculamos a distância entre os pontos manualmente para entender como o algoritmo pensa.</p>
+                              <p>O KNN (K-Nearest Neighbors) classifica um ponto novo baseando-se nos seus vizinhos mais próximos.</p>`,
                     code: `library(palmerpenguins)
-pinguins <- na.omit(penguins) # Remove vazios
+pinguins <- na.omit(penguins) 
 
-# Cálculo da Distância Euclidiana (Manual)
-# Distância entre o 1º pinguim de teste e todos do treino
+# Cálculo Manual da Distância
+# (Apenas ilustrativo, ver próximo slide para método automático)
+
 distancias <- numeric(nrow(treino))
-
 for (k in 1:nrow(treino)) {
   distancias[k] <- sqrt(
     (teste$body_mass_g[1] - treino$body_mass_g[k])^2 +
     (teste$bill_length_mm[1] - treino$bill_length_mm[k])^2
   )
-}
+}`
+                },
+                {
+                    title: "KNN Profissional (class)",
+                    tag: "Machine Learning",
+                    filename: "estudoDeCaso_penguins_v2.R",
+                    tip: "O pacote 'class' contém a implementação padrão do KNN no R.",
+                    content: `<p>No dia a dia, usamos o pacote <code>class</code>. Ele é ultra-rápido.</p>
+                              <p>Aqui normalizamos os dados (boa prática no KNN) e rodamos o algoritmo com K=3.</p>`,
+                    code: `library(class)
 
-# Os menores valores em 'distancias' são os vizinhos mais próximos!`
+# Preparando apenas colunas numéricas
+treino_num <- treino[, c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")]
+teste_num <- teste[, c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g")]
+
+# Rodando o KNN
+previsoes_knn <- knn(train = treino_num, 
+                     test = teste_num, 
+                     cl = treino$species, # Classes reais (rótulos)
+                     k = 3)
+
+# Matriz de Confusão
+table(Teste = teste$species, Previsao = previsoes_knn)`
                 }
             ]
         };
