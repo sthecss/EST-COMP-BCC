@@ -2,28 +2,39 @@
 lucide.createIcons();
 
 // =============================================================================
-// 1. CONFIGURAÇÃO DO GITHUB
+// 1. CONFIGURAÇÃO DO GITHUB (FETCH DINÂMICO)
 // =============================================================================
+// Substituímos a variável 'fullCodes' fixa pela lógica de busca na internet.
 const GITHUB_BASE_URL = "https://raw.githubusercontent.com/sthecss/EST-COMP-BCC/main/CODIGOS/";
 
-// Cache para não precisar baixar o mesmo arquivo duas vezes
+// Cache para não gastar dados baixando o mesmo arquivo 2 vezes
 const codeCache = {};
 
 async function fetchCodeFromGitHub(filename) {
+    const codeElement = document.getElementById('code-block');
+    
+    // Feedback visual enquanto carrega
+    codeElement.textContent = `# ☁️ Conectando ao GitHub...\n# Buscando o arquivo: ${filename}...`;
+    document.body.classList.add('full-code-mode');
+
+    // Se já baixou antes, usa a memória (Cache)
     if (codeCache[filename]) {
         return codeCache[filename];
     }
 
     try {
         const response = await fetch(GITHUB_BASE_URL + filename);
-        if (!response.ok) throw new Error(`Erro: ${response.status}`);
+        
+        if (!response.ok) {
+            throw new Error(`Erro ${response.status}: Arquivo não encontrado no repositório.`);
+        }
         
         const text = await response.text();
         codeCache[filename] = text; // Salva no cache
         return text;
     } catch (error) {
-        console.error("Falha ao buscar do GitHub:", error);
-        return `# Erro ao carregar o arquivo ${filename}.\n# Verifique sua conexão com a internet ou se o nome do arquivo está correto no GitHub.`;
+        console.error("Erro no fetch:", error);
+        return `# ❌ ERRO DE CONEXÃO\n# Não foi possível baixar o código.\n# Detalhe: ${error.message}`;
     }
 }
 
@@ -35,8 +46,7 @@ const presentationData = {
     "intro": [
         { 
             title: "👋 Olá, Mundo!", 
-            code: "# Bem-vindo ao meu Portfolio de Estatística Computacional!\n\n# Aqui reúno minhas anotações sobre R, cobrindo desde\n# a sintaxe básica até algoritmos de Inteligência Artificial.\n\nprint('Seja bem-vindo!')\n", 
-            tip:"Este projeto foi criado para facilitar o acesso às minhas anotações de aula.¨
+            code: "# Bem-vindo ao meu Portfolio de Estatística Computacional!\n\n# Aqui reúno minhas anotações sobre R, cobrindo desde\n# a sintaxe básica até algoritmos de Inteligência Artificial.\n\nprint('Seja bem-vindo!')\nEste projeto foi criado para facilitar o acesso às minhas anotações de aula.", 
         },
         { 
             title: "A Ementa do Curso", 
@@ -45,8 +55,7 @@ const presentationData = {
         },
         { 
             title: "Tecnologia Live", 
-            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\n# Repositório: sthecss/EST-COMP-BCC\n",
-            tip:"Isso garante que você esteja vendo sempre a versão mais atualizada dos meus estudos!"
+            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\n# Repositório: sthecss/EST-COMP-BCC\nIsso garante que você esteja vendo sempre a versão mais atualizada dos meus estudos!", 
         }
     ],
 
@@ -205,6 +214,7 @@ const presentationData = {
 
 // =============================================================================
 // 3. LÓGICA DE CONTROLE DA PÁGINA
+// (Atualizada para usar fetchCodeFromGitHub)
 // =============================================================================
 
 let currentQueue = presentationData["intro"];
@@ -218,51 +228,47 @@ const slideCounter = document.getElementById('slide-counter');
 function renderSlide() {
     const item = currentQueue[currentIndex];
     
-    // Atualiza Textos Básicos
+    // Atualiza Textos
     slideTitle.innerText = item.title;
     slideTip.innerText = item.tip;
+    if (slideCounter) slideCounter.innerText = `${currentIndex + 1} / ${currentQueue.length}`;
     
-    // Atualiza Contador
-    if (slideCounter) {
-        slideCounter.innerText = `${currentIndex + 1} / ${currentQueue.length}`;
-    }
-    
-    // LÓGICA PRINCIPAL: Snippet vs Código Completo
-    if (item.getFullCode && fullCodes[item.filename]) {
-        // Modo Código Completo
-        slideCode.textContent = fullCodes[item.filename];
-        
-        // Adiciona classe visual ao body para o CSS estilizar (borda verde, fundo escuro, etc)
-        document.body.classList.add('full-code-mode');
-        
+    // Lógica Dinâmica (Fetch do GitHub)
+    if (item.getFullCode) {
+        // Chama a função que busca na internet
+        fetchCodeFromGitHub(item.filename).then(code => {
+            // Verifica se o usuário ainda está no mesmo slide
+            if (currentQueue[currentIndex] === item) {
+                slideCode.textContent = code;
+                highlightCode();
+            }
+        });
     } else {
-        // Modo Snippet (Trecho curto)
+        // Slide normal (Texto estático)
         slideCode.textContent = item.code;
-        
-        // Remove classe visual
         document.body.classList.remove('full-code-mode');
+        highlightCode();
     }
-    
-    // Reaplica o Syntax Highlighting (Prism.js)
+}
+
+function highlightCode() {
     slideCode.className = 'language-r code-font text-sm leading-relaxed';
     if (window.Prism) {
         Prism.highlightElement(slideCode);
     }
 }
 
-// Funções chamadas pelos botões do HTML
+// Navegação
 function loadModule(moduleKey) {
     if (presentationData[moduleKey]) {
         currentQueue = presentationData[moduleKey];
         currentIndex = 0;
         
-        // Feedback visual nos botões (opcional, remove active de todos e adiciona no atual)
+        // Feedback visual nos botões (opcional)
         document.querySelectorAll('aside button').forEach(btn => {
-            btn.classList.remove('bg-zinc-800', 'border-l-4', 'border-green-500');
-            btn.classList.add('hover:bg-zinc-800');
+             // Resetar estilos se necessário
         });
         
-        // Tenta achar o botão clicado e ativar (se passado via event, mas aqui simplificamos)
         renderSlide();
     }
 }
@@ -284,7 +290,6 @@ function prevSlide() {
 function copyCode() {
     const codeText = document.getElementById('code-block').textContent;
     navigator.clipboard.writeText(codeText).then(() => {
-        // Feedback simples
         const btnText = document.querySelector('button[onclick="copyCode()"] span');
         if(btnText) {
             const original = btnText.innerText;
