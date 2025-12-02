@@ -3,38 +3,598 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página em Construção</title>
+    <title>Estatística Computacional - Portfolio R</title>
+    
+    <!-- Tailwind CSS para Estilização Rápida e Bento Grid -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Prism.js para Colorir o Código R -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-r.min.js"></script>
+    
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f2f2f2;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Slate 100 */
         }
-        .container {
-            text-align: center;
-            padding: 20px;
-            border: 2px solid #ccc;
-            background-color: white;
-            border-radius: 10px;
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
         }
-        h1 {
-            font-size: 2.5em;
-            color: #333;
+
+        /* Animações suaves */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
         }
-        p {
-            font-size: 1.2em;
-            color: #666;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilo Bento Grid */
+        .bento-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Scrollbar personalizada para o código */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; 
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Em Construção</h1>
-        <p>Este site ainda está sendo desenvolvido. Volte mais tarde!</p>
-    </div>
+<body class="text-gray-800 antialiased h-screen overflow-hidden flex flex-col">
+
+    <!-- HEADER / NAV -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-50">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="goHome()">
+            <div class="bg-blue-600 text-white p-2 rounded-lg font-bold">R</div>
+            <div>
+                <h1 class="font-bold text-lg leading-tight">Estatística Comp.</h1>
+                <p class="text-xs text-gray-500">Portfólio da Sthe 🐱‍💻</p>
+            </div>
+        </div>
+        <div id="nav-controls" class="hidden flex gap-4">
+            <button onclick="prevSlide()" class="p-2 hover:bg-gray-100 rounded-full transition" title="Anterior">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <span id="slide-counter" class="self-center font-mono text-sm text-gray-500">1 / 5</span>
+            <button onclick="nextSlide()" class="p-2 hover:bg-gray-100 rounded-full transition" title="Próximo">
+                <i data-lucide="chevron-right"></i>
+            </button>
+            <button onclick="goHome()" class="ml-4 px-4 py-2 bg-gray-900 text-white rounded-lg text-sm hover:bg-gray-700 transition">
+                Voltar
+            </button>
+        </div>
+    </nav>
+
+    <!-- VIEW: BENTO GRID (HOME) -->
+    <main id="home-view" class="flex-1 overflow-y-auto p-4 md:p-8 fade-in">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-4 gap-4 h-full min-h-[600px]">
+                
+                <!-- 1. Intro Card (Grande) -->
+                <div class="bento-card col-span-1 md:col-span-2 md:row-span-2 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-8 flex flex-col justify-between" onclick="openModule('intro')">
+                    <div>
+                        <div class="bg-white/20 w-fit px-3 py-1 rounded-full text-xs font-medium mb-4 backdrop-blur-sm">Leia Antes</div>
+                        <h2 class="text-4xl font-bold mb-2">Bem-vindos!</h2>
+                        <p class="text-blue-100">Uma jornada pelos códigos de Estatística Computacional.</p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm opacity-80 mb-4">"Códigos desenvolvidos durante a disciplina com o Prof. Pedro Franklin. Um tesouro de referências!"</p>
+                        <div class="flex items-center gap-2 text-sm font-semibold">
+                            Começar aqui <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                    <!-- Decorativo -->
+                    <i data-lucide="book-open" class="absolute top-8 right-8 w-24 h-24 text-white/10"></i>
+                </div>
+
+                <!-- 2. Sintaxe Básica -->
+                <div class="bento-card col-span-1 md:col-span-1 md:row-span-2 bg-white rounded-3xl p-6 border border-gray-200 flex flex-col relative" onclick="openModule('sintaxe')">
+                    <div class="bg-green-100 text-green-700 w-10 h-10 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="code-2"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-1">Sintaxe R</h3>
+                    <p class="text-sm text-gray-500 leading-relaxed">Aritmética, vetores e manipulação de valores básicos.</p>
+                    <div class="mt-auto pt-4">
+                        <span class="text-xs bg-gray-100 px-2 py-1 rounded border">sintaxe_Aritmetica.R</span>
+                    </div>
+                </div>
+
+                <!-- 3. Visualização (Ggplot2) -->
+                <div class="bento-card col-span-1 md:col-span-1 md:row-span-2 bg-gray-900 text-gray-100 rounded-3xl p-6 flex flex-col justify-between" onclick="openModule('graficos')">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-xl text-pink-400">Visualização</h3>
+                            <i data-lucide="bar-chart-2" class="text-gray-500"></i>
+                        </div>
+                        <p class="text-sm text-gray-400 mt-2">Gráficos nativos e o poder do Ggplot2.</p>
+                    </div>
+                    <div class="h-20 w-full bg-gray-800 rounded-lg mt-4 flex items-end justify-around p-2 gap-1 opacity-50">
+                        <div class="bg-pink-500 w-full h-[40%] rounded-sm"></div>
+                        <div class="bg-pink-500 w-full h-[70%] rounded-sm"></div>
+                        <div class="bg-pink-500 w-full h-[50%] rounded-sm"></div>
+                        <div class="bg-pink-500 w-full h-[90%] rounded-sm"></div>
+                    </div>
+                </div>
+
+                <!-- 4. Estudo de Caso: Titanic -->
+                <div class="bento-card col-span-1 md:col-span-2 md:row-span-1 bg-white rounded-3xl p-6 border border-gray-200 flex items-center gap-6" onclick="openModule('titanic')">
+                    <div class="bg-blue-50 p-4 rounded-2xl">
+                        <i data-lucide="ship" class="w-8 h-8 text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg">O Naufrágio do Titanic</h3>
+                        <p class="text-sm text-gray-500">Inclui "Dicas Iniciais" e análise completa.</p>
+                    </div>
+                    <i data-lucide="chevron-right" class="ml-auto text-gray-300"></i>
+                </div>
+
+                <!-- 5. Estudo de Caso: Flores (Iris) -->
+                <div class="bento-card col-span-1 md:col-span-1 md:row-span-1 bg-purple-50 rounded-3xl p-6 border border-purple-100 hover:border-purple-300" onclick="openModule('flores')">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="flower-2" class="text-purple-600"></i>
+                        <h3 class="font-bold text-purple-900">Iris Dataset</h3>
+                    </div>
+                    <p class="text-xs text-purple-700">Classificação manual de espécies.</p>
+                </div>
+
+                <!-- 6. Estudo de Caso: Pinguins (KNN) -->
+                <div class="bento-card col-span-1 md:col-span-1 md:row-span-1 bg-orange-50 rounded-3xl p-6 border border-orange-100 hover:border-orange-300" onclick="openModule('pinguins')">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="bird" class="text-orange-600"></i>
+                        <h3 class="font-bold text-orange-900">Pinguins KNN</h3>
+                    </div>
+                    <p class="text-xs text-orange-700">Machine Learning com vizinhos próximos.</p>
+                </div>
+
+                 <!-- 7. Datasets Info -->
+                 <div class="bento-card col-span-1 md:col-span-4 md:row-span-1 bg-white rounded-3xl p-4 border border-gray-200 flex items-center justify-between overflow-hidden">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-gray-100 p-2 rounded-lg"><i data-lucide="database" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-bold text-sm">Datasets Disponíveis</span>
+                            <div class="flex gap-2 mt-1 text-xs text-gray-500">
+                                <span class="bg-gray-100 px-2 py-0.5 rounded">cancer.csv</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded">chicago.csv</span>
+                                <span class="bg-gray-100 px-2 py-0.5 rounded">russian_tweets.csv</span>
+                                <span class="hidden md:inline bg-gray-100 px-2 py-0.5 rounded">femur.csv</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-right text-gray-400">
+                        Total 9 arquivos<br>CSV e TXT
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <footer class="text-center text-gray-400 text-sm mt-8 pb-4">
+            &copy; 2025 Sthe & Prof. Pedro Franklin | Estatística Computacional
+        </footer>
+    </main>
+
+    <!-- VIEW: SLIDE / AULA (Hidden by default) -->
+    <main id="slide-view" class="hidden flex-1 flex flex-col md:flex-row h-full overflow-hidden fade-in">
+        
+        <!-- Painel Esquerdo: Explicação -->
+        <div class="w-full md:w-2/5 bg-white p-8 overflow-y-auto border-r border-gray-200 flex flex-col">
+            <div id="slide-tag" class="uppercase tracking-wider text-xs font-bold text-blue-600 mb-2">Módulo</div>
+            <h2 id="slide-title" class="text-3xl font-bold text-gray-900 mb-6">Título da Aula</h2>
+            
+            <div id="slide-content" class="prose prose-slate text-gray-600 space-y-4 flex-1">
+                <!-- Conteúdo injetado via JS -->
+            </div>
+
+            <!-- Dica Visual -->
+            <div class="mt-8 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r text-sm text-yellow-800">
+                <p class="font-bold mb-1"><i data-lucide="lightbulb" class="inline w-4 h-4 mr-1"></i> Dica:</p>
+                <span id="slide-tip">Use o RStudio para rodar estes exemplos localmente.</span>
+            </div>
+        </div>
+
+        <!-- Painel Direito: Código -->
+        <div class="w-full md:w-3/5 bg-[#1e1e1e] flex flex-col h-[50vh] md:h-auto">
+            <div class="bg-[#252526] px-4 py-2 text-xs text-gray-400 border-b border-[#333] flex justify-between items-center">
+                <span id="code-filename">script.R</span>
+                <button class="hover:text-white flex items-center gap-1" onclick="copyCode()">
+                    <i data-lucide="copy" class="w-3 h-3"></i> Copiar
+                </button>
+            </div>
+            <div class="flex-1 overflow-auto relative group">
+                <pre class="m-0 p-6 !bg-transparent h-full"><code id="code-block" class="language-r code-font text-sm">
+# O código aparecerá aqui...
+                </code></pre>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Inicializa Ícones
+        lucide.createIcons();
+
+        // --- DADOS DO CONTEÚDO ---
+        // Extraído dos arquivos fornecidos pelo usuário
+        const modules = {
+            intro: [
+                {
+                    title: "Considerações Iniciais",
+                    tag: "Introdução",
+                    filename: "(leiaAntes).md",
+                    tip: "Instale o RStudio para uma melhor experiência.",
+                    content: `<p>Olá! Estes códigos foram desenvolvidos durante a disciplina de <strong>Estatística Computacional</strong> no curso de Ciência da Computação.</p>
+                              <p>Recomendo fortemente o uso da IDE <strong>RStudio</strong>. Primeiro instale o R propriamente dito, e em seguida o RStudio.</p>
+                              <p>Aqui você encontrará exemplos de sintaxe básica, geração de gráficos e estudos de casos reais como o do Titanic e Iris.</p>`,
+                    code: `# Bem-vindo ao R!
+# Para instalar um pacote, usamos:
+install.packages("ggplot2")
+
+# Para carregar uma biblioteca:
+library(ggplot2)
+
+# Para pedir ajuda sobre uma função:
+?mean
+?sample
+
+# "Bjs da Sthe! 🐱‍💻"`
+                }
+            ],
+            sintaxe: [
+                {
+                    title: "Aritmética Básica",
+                    tag: "Sintaxe",
+                    filename: "sintaxe_Aritmetica.R",
+                    tip: "O R trata TRUE como 1 e FALSE como 0 em operações matemáticas.",
+                    content: `<p>O R funciona como uma calculadora poderosa. Além das operações matemáticas padrão (+, -, *, /), temos operações lógicas.</p>
+                              <p>Um detalhe interessante é a coerção lógica: você pode somar valores booleanos para contar ocorrências verdadeiras.</p>`,
+                    code: `# Operadores aritméticos:
+2 + 5         # Soma
+3 ^ 2         # Potência
+100 %% 2      # Módulo (Resto da divisão)
+
+# Aritmética Lógica
+testeA <- TRUE
+FALSE + testeA  # Retorna 1
+TRUE + TRUE     # Retorna 2
+
+# Operadores lógicos:
+!TRUE          # Negação
+TRUE | FALSE   # OU lógico
+TRUE & FALSE   # E lógico`
+                },
+                {
+                    title: "Vetores e Valores",
+                    tag: "Sintaxe",
+                    filename: "sintaxe_CriandoManipulandoValores.R",
+                    tip: "A função c() significa 'combine' ou 'concatenate'.",
+                    content: `<p>No R, a estrutura de dados mais fundamental é o <strong>vetor</strong>. Mesmo um único número é um vetor de tamanho 1.</p>
+                              <p>Usamos a função <code>c()</code> para criar vetores. Podemos fazer operações em todo o vetor de uma vez (vetorização).</p>`,
+                    code: `# Atribuição (pode usar <- ou ->)
+testeA <- 3 * 2
+4 * 8 -> testeB
+
+# Criando vetores
+x1 <- c(2, 6, 20)
+length(x1)          # Tamanho: 3
+mean(x1)            # Média
+
+# Acessando elementos
+x1[2]               # Segundo elemento (6)
+x1[c(1, 3)]         # Primeiro e terceiro
+
+# Filtragem lógica (Super útil!)
+x2 <- c(x1, 67, 90)
+x2[x2 < 70]         # Retorna elementos menores que 70`
+                },
+                {
+                    title: "Funções Úteis",
+                    tag: "Ferramentas",
+                    filename: "funcoes_gerandoDados.R",
+                    tip: "set.seed() garante que seus números aleatórios sejam os mesmos toda vez.",
+                    content: `<p>O R possui várias funções embutidas para gerar sequências e números aleatórios, essenciais para simulações estatísticas.</p>
+                              <ul class="list-disc pl-5 mt-2">
+                                <li><code>sample</code>: Sorteia valores.</li>
+                                <li><code>seq</code>: Cria sequências.</li>
+                                <li><code>rep</code>: Repete valores.</li>
+                              </ul>`,
+                    code: `# 1. Amostra aleatória
+set.seed(1)  # Garante reprodutibilidade
+sample(1:10, size = 5, replace = FALSE)
+
+# 2. Sequências
+seq(from = 1, to = 10, by = 2) # 1, 3, 5, 7, 9
+
+# 3. Repetição
+rep("Oi", times = 3) # "Oi" "Oi" "Oi"
+
+# 4. Ordenação e Valores Únicos
+vetor <- c(1, 2, 2, 3, 4, 4, 5)
+unique(vetor)  # 1 2 3 4 5
+table(vetor)   # Conta frequência de cada um`
+                }
+            ],
+            graficos: [
+                {
+                    title: "Gráficos Nativos",
+                    tag: "Visualização",
+                    filename: "funcoes_graficosNativamente.R",
+                    tip: "Gráficos nativos são rápidos para exploração inicial.",
+                    content: `<p>O R "Vanilla" (sem pacotes) já faz gráficos decentes. São úteis para uma olhada rápida nos dados.</p>
+                              <p>As funções principais são <code>plot()</code>, <code>hist()</code> e <code>barplot()</code>.</p>`,
+                    code: `# Dados de exemplo
+x <- c(1, 2, 3, 4, 5)
+y <- c(2, 3, 5, 7, 11)
+
+# Gráfico de Dispersão Simples
+plot(x, y, 
+     main="Gráfico de Dispersão",
+     col="blue", 
+     pch=19) # pch define o formato do ponto
+
+# Histograma
+dados <- c(1, 2, 2, 3, 3, 3, 4, 5)
+hist(dados, col="lightblue", main="Histograma")`
+                },
+                {
+                    title: "Poder do Ggplot2",
+                    tag: "Visualização",
+                    filename: "funcoes_Ggplot2.R",
+                    tip: "Ggplot2 funciona em camadas (layers) somadas com '+'.",
+                    content: `<p>O <strong>ggplot2</strong> é o padrão ouro para gráficos em Data Science. Ele usa a "Gramática dos Gráficos".</p>
+                              <p>Você define os dados, a estética (aes) e a geometria (geom).</p>`,
+                    code: `library(ggplot2)
+
+dados_disp <- data.frame(x = c(1, 2, 3, 4, 5), y = c(2, 3, 5, 7, 11))
+
+# Estrutura básica: Dados + Aes + Geom
+ggplot(dados_disp, aes(x = x, y = y)) +
+  geom_point(color = "blue", size = 3) +
+  labs(title = "Gráfico com Ggplot2",
+       x = "Eixo X",
+       y = "Eixo Y") +
+  theme_minimal() # Tema limpo`
+                }
+            ],
+            titanic: [
+                {
+                    title: "Manipulação Inicial",
+                    tag: "Titanic - Parte 1",
+                    filename: "estudoDeCaso_dicasIniciais.R",
+                    tip: "Podemos remover colunas inteiras usando índice negativo, ex: dados[, -1].",
+                    content: `<p><strong>Dicas Iniciais:</strong> Antes da modelagem, precisamos limpar os dados.</p>
+                              <p>Neste script introdutório, aprendemos a:</p>
+                              <ul class="list-disc pl-5 mt-2">
+                                <li>Importar dados com <code>read.table</code>.</li>
+                                <li>Remover colunas desnecessárias.</li>
+                                <li>Fazer contagens simples (quantos sobreviveram?).</li>
+                              </ul>`,
+                    code: `# Importando
+dados <- read.table(file = "titanic.txt", header = TRUE, sep = ",")
+
+# Excluindo colunas (ID e Embarked)
+dadosLimpos <- dados[, -c(1, 12)]
+
+# Contando sobreviventes (Soma da coluna Survived onde 1=Sim)
+sobreviventes <- dados[, "Survived"]
+print(sum(sobreviventes))
+
+# Separando homens e mulheres
+homens <- dados[dados$Sex == "male", ]
+mulheres <- dados[dados$Sex == "female", ]`
+                },
+                {
+                    title: "Preparando a Análise",
+                    tag: "Titanic - Parte 2",
+                    filename: "estudoDeCaso_titanic.R",
+                    tip: "Summary() e Str() são os melhores amigos do analista.",
+                    content: `<p>Aprofundando no estudo de caso, transformamos variáveis categóricas (como Sobreviveu e Classe) em <strong>fatores</strong> para que o R entenda que são categorias, não números.</p>`,
+                    code: `# Carregando novamente para o estudo completo
+titanic <- read.table(file = "titanic.txt", sep = ",", header = TRUE)
+
+# Removendo colunas (ID, Ticket, Cabin, Embarked)
+titanic <- titanic[ , -c(1, 9:12)]
+
+# Convertendo para fatores (Categorias)
+titanic$Survived <- as.factor(titanic$Survived)
+titanic$Pclass <- as.factor(titanic$Pclass)
+titanic$Sex <- as.factor(titanic$Sex)
+
+summary(titanic) # Resumo estatístico`
+                },
+                {
+                    title: "Visualizando Sobrevivência",
+                    tag: "Titanic - Parte 2",
+                    filename: "estudoDeCaso_titanic.R",
+                    tip: "Facet_wrap divide o gráfico em vários painéis.",
+                    content: `<p>Quem sobreviveu mais? Homens ou mulheres? Ricos ou pobres?</p>
+                              <p>Usamos o ggplot para cruzar essas variáveis. O gráfico mostra a sobrevivência dividida por Gênero e Classe.</p>`,
+                    code: `# Sobrevivência por Gênero e Classe
+ggplot(data = titanic, aes(x = Sex, fill = Survived)) + 
+  geom_bar(color = "black") + 
+  scale_fill_manual(values = c("0" = "#A02334", "1" = "#96CEB4"),
+                    labels = c("Não", "Sim")) +
+  facet_wrap(~Pclass) + # Divide por classe (1ª, 2ª, 3ª)
+  labs(title = "Sobrevivência por Classe e Gênero", 
+       y = "Quantidade")`
+                }
+            ],
+            flores: [
+                {
+                    title: "Iris Dataset",
+                    tag: "Classificação",
+                    filename: "estudoDeCaso_flores.R",
+                    tip: "Set.seed é usado aqui para garantir que o treino/teste seja igual sempre.",
+                    content: `<p>O conjunto de dados <strong>Iris</strong> é clássico. Ele contém medidas de pétalas e sépalas de 3 espécies de flores.</p>
+                              <p>Aqui, dividimos os dados em treino (80%) e teste (20%) para criar um modelo.</p>`,
+                    code: `data(iris)
+set.seed(20102003) 
+
+# Embaralhando linhas
+iris <- iris[sample(nrow(iris)), ]
+
+# Divisão 80/20
+n <- round(0.8 * nrow(iris))
+treino <- iris[1:n, ]
+teste <- iris[-(1:n), ]
+
+# Visualizando dispersão
+ggplot(treino, aes(x = Petal.Length, y = Petal.Width, color = Species)) +
+  geom_point()`
+                },
+                {
+                    title: "Algoritmo Manual",
+                    tag: "Lógica",
+                    filename: "estudoDeCaso_flores.R",
+                    tip: "Este é um exemplo de 'Hard Coding' de regras, precursor do Machine Learning.",
+                    content: `<p>Criamos um classificador manual simples baseado na observação dos gráficos:
+                              <br>- Pétala pequena (< 2.5) = Setosa.
+                              <br>- Largura pequena (< 1.75) = Versicolor.
+                              <br>- O resto = Virginica.</p>`,
+                    code: `resultados <- character(nrow(teste))
+
+for (j in 1:nrow(teste)) {
+  if (teste$Petal.Length[j] < 2.5) {
+    resultados[j] <- "setosa"
+  } else if (teste$Petal.Width[j] < 1.75) {
+    resultados[j] <- "versicolor"
+  } else {
+    resultados[j] <- "virginica"
+  }
+}
+
+# Calculando precisão
+taxa_acerto <- mean(teste$Species == resultados)
+print(paste("Acerto:", taxa_acerto))`
+                }
+            ],
+            pinguins: [
+                {
+                    title: "Pinguins & KNN",
+                    tag: "Machine Learning",
+                    filename: "estudoDeCaso_penguins.R",
+                    tip: "KNN = K-Nearest Neighbors (K-Vizinhos Mais Próximos).",
+                    content: `<p>Usamos o dataset <code>palmerpenguins</code>. O objetivo é prever a espécie baseada no peso e bico.</p>
+                              <p>O algoritmo KNN calcula a <strong>distância euclidiana</strong> entre o ponto que queremos prever e todos os pontos conhecidos.</p>`,
+                    code: `library(palmerpenguins)
+pinguins <- na.omit(penguins) # Remove vazios
+
+# Cálculo da Distância Euclidiana (Manual)
+# Distância entre o 1º pinguim de teste e todos do treino
+distancias <- numeric(nrow(treino))
+
+for (k in 1:nrow(treino)) {
+  distancias[k] <- sqrt(
+    (teste$body_mass_g[1] - treino$body_mass_g[k])^2 +
+    (teste$bill_length_mm[1] - treino$bill_length_mm[k])^2
+  )
+}
+
+# Os menores valores em 'distancias' são os vizinhos mais próximos!`
+                }
+            ]
+        };
+
+        // --- LÓGICA DE NAVEGAÇÃO ---
+        
+        let currentQueue = [];
+        let currentIndex = 0;
+
+        const homeView = document.getElementById('home-view');
+        const slideView = document.getElementById('slide-view');
+        const navControls = document.getElementById('nav-controls');
+        
+        // Elementos do Slide
+        const slideTitle = document.getElementById('slide-title');
+        const slideTag = document.getElementById('slide-tag');
+        const slideContent = document.getElementById('slide-content');
+        const slideCode = document.getElementById('code-block');
+        const slideFilename = document.getElementById('code-filename');
+        const slideTip = document.getElementById('slide-tip');
+        const slideCounter = document.getElementById('slide-counter');
+
+        function openModule(moduleKey) {
+            currentQueue = modules[moduleKey];
+            currentIndex = 0;
+            renderSlide();
+            
+            // Transição de tela
+            homeView.classList.add('hidden');
+            slideView.classList.remove('hidden');
+            navControls.classList.remove('hidden');
+            navControls.classList.add('flex');
+        }
+
+        function renderSlide() {
+            const item = currentQueue[currentIndex];
+            
+            // Atualiza textos
+            slideTitle.innerText = item.title;
+            slideTag.innerText = item.tag;
+            slideContent.innerHTML = item.content;
+            slideFilename.innerText = item.filename;
+            slideTip.innerText = item.tip;
+            slideCounter.innerText = `${currentIndex + 1} / ${currentQueue.length}`;
+            
+            // Atualiza Código
+            slideCode.textContent = item.code;
+            
+            // Re-executa o highlight do Prism.js
+            Prism.highlightElement(slideCode);
+        }
+
+        function nextSlide() {
+            if (currentIndex < currentQueue.length - 1) {
+                currentIndex++;
+                renderSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderSlide();
+            }
+        }
+
+        function goHome() {
+            slideView.classList.add('hidden');
+            navControls.classList.add('hidden');
+            navControls.classList.remove('flex');
+            homeView.classList.remove('hidden');
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('code-block').innerText;
+            navigator.clipboard.writeText(code);
+            alert("Código copiado!");
+        }
+
+    </script>
 </body>
 </html>
