@@ -35,7 +35,8 @@ const presentationData = {
     "intro": [
         { 
             title: "👋 Olá, Mundo!", 
-            code: "# Bem-vindo ao meu Portfolio de Estatística Computacional!\n\n# Aqui reúno minhas anotações sobre R, cobrindo desde\n# a sintaxe básica até algoritmos de Inteligência Artificial.\n\nprint('Seja bem-vindo!')\nEste projeto foi criado para facilitar o acesso às minhas anotações de aula.", 
+            code: "# Bem-vindo ao meu Portfolio de Estatística Computacional!\n\n# Aqui reúno minhas anotações sobre R, cobrindo desde\n# a sintaxe básica até algoritmos de Inteligência Artificial.\n\nprint('Seja bem-vindo!')\n", 
+            tip:"Este projeto foi criado para facilitar o acesso às minhas anotações de aula.¨
         },
         { 
             title: "A Ementa do Curso", 
@@ -44,7 +45,8 @@ const presentationData = {
         },
         { 
             title: "Tecnologia Live", 
-            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\n# Repositório: sthecss/EST-COMP-BCC\nIsso garante que você esteja vendo sempre a versão mais atualizada dos meus estudos!", 
+            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\n# Repositório: sthecss/EST-COMP-BCC\n",
+            tip:"Isso garante que você esteja vendo sempre a versão mais atualizada dos meus estudos!"
         }
     ],
 
