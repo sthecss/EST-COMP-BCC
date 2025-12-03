@@ -56,7 +56,7 @@ const presentationData = {
         },
         { 
             title: "Tecnologia Live", 
-            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\n# Repositório: sthecss/EST-COMP-BCC", 
+            code: "# Aviso Técnico:\n\n# Todos os códigos apresentados aqui são carregados\n# em TEMPO REAL diretamente do meu GitHub.\n\nRepositório: [sthecss/EST-COMP-BCC](https://github.com/sthecss/EST-COMP-BCC)", 
             tip: "Isso garante que você esteja vendo sempre a versão mais atualizada dos meus estudos!"
         }
     ],
